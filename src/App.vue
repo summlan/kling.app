@@ -1,32 +1,62 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+  <div class="antialiased">
+     <site-header />
+    <div class="container mx-auto px-4 py-3">
+      <router-view />
     </div>
-    <router-view/>
   </div>
 </template>
 
+<script lang="ts">
+import Vue from 'vue'
+import { firestore, GoogleAuthProvider, auth } from '@/firebaseConfig'
+import router from './router'
+import SiteHeader from '@/components/SiteHeader.vue'
+
+export default Vue.extend({
+  name: 'app',
+  components: {
+    SiteHeader
+  },
+  data () {
+    return {
+      documents: [],
+      isOpen: true
+    }
+  },
+  methods: {
+    signInWithGoogle () {
+      auth.signInWithPopup(new GoogleAuthProvider().setCustomParameters({ prompt: 'select_account' }))
+        .then((credentials) => {
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    signOut () {
+      auth.signOut()
+        .then(() => {
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }
+})
+</script>
+
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+  @tailwind base;
+  @tailwind components;
 
-#nav {
-  padding: 30px;
-}
+  @tailwind utilities;
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+  @font-face {
+    font-family: BlackPearl;
+    src: url('~@/assets/BlackPearl.ttf') format('truetype');
+  }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+  body {
+    font-family: 'Montserrat', sans-serif;
+  }
 </style>
