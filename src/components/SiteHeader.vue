@@ -16,7 +16,7 @@
         <div class="sm:flex sm:items-center">
           <div class="px-2 pt-2 pb-5 border-b border-pink-600 sm:flex sm:border-b-0 sm:py-0 sm:px-0">
             <router-link exact to="/" class="block px-3 py-1 rounded font-semibold text-white hover:bg-pink-600 sm:text-sm sm:px-2">Home</router-link>
-            <!-- <router-link exact to="/skattjakt" class="mt-1 block px-3 py-1 rounded font-semibold text-white hover:bg-pink-600 sm:mt-0 sm:text-sm sm:px-2 sm:ml-2">Skattjakt</router-link> -->
+            <router-link exact to="/skattjakt" class="mt-1 block px-3 py-1 rounded font-semibold text-white hover:bg-pink-600 sm:mt-0 sm:text-sm sm:px-2 sm:ml-2">Skattjakt</router-link>
             <router-link exact to="/letters" class="mt-1 block px-3 py-1 rounded font-semibold text-white hover:bg-pink-600 sm:mt-0 sm:text-sm sm:px-2 sm:ml-2">Bokstäver</router-link>
           </div>
           <div class="relative px-5 py-5 sm:py-0 sm:ml-4 sm:px-0">
