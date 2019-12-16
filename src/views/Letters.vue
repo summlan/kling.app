@@ -56,33 +56,24 @@ function haveIntersection (r1, r2) {
 function snapToLetter (group, target) {
   let groupSnap = {
     left: { x: group.x, y: group.y + (group.height / 2) },
-    right: { x: group.x + group.width, y: group.y + (group.height / 2) },
-    top: { x: group.x + group.width / 2, y: group.y },
-    bottom: { x: group.x + group.width / 2, y: group.y + group.height }
+    right: { x: group.x + group.width, y: group.y + (group.height / 2) }
   }
 
   let targetSnap = {
     left: { x: target.x, y: target.y + (target.height / 2) },
-    right: { x: target.x + target.width, y: target.y + (target.height / 2) },
-    top: { x: target.x + target.width / 2, y: target.y },
-    bottom: { x: target.x + target.width / 2, y: target.y + target.height }
+    right: { x: target.x + target.width, y: target.y + (target.height / 2) }
   }
 
   let distanceBetween = {
     left: Math.hypot((targetSnap.left.x - groupSnap.right.x), (targetSnap.left.y - groupSnap.right.y)),
-    right: Math.hypot((targetSnap.right.x - groupSnap.left.x), (targetSnap.right.y - groupSnap.left.y)),
-    top: Math.hypot((targetSnap.top.x - groupSnap.bottom.x), (targetSnap.top.y - groupSnap.bottom.y)),
-    bottom: Math.hypot((targetSnap.bottom.x - groupSnap.top.x), (targetSnap.bottom.y - groupSnap.top.y))
+    right: Math.hypot((targetSnap.right.x - groupSnap.left.x), (targetSnap.right.y - groupSnap.left.y))
   }
 
   // left snap
-  if (distanceBetween.left < 20) return { x: group.x + target.width, y: group.y }
+  if (distanceBetween.left < 30) return { x: group.x + target.width, y: group.y }
   // right snap
-  else if (distanceBetween.right < 20) return { x: group.x - target.width, y: group.y }
+  else if (distanceBetween.right < 30) return { x: group.x - target.width, y: group.y }
   // top snap
-  else if (distanceBetween.top < 20) return { x: group.x, y: group.y + target.height }
-  // bottom snap
-  else if (distanceBetween.bottom < 20) return { x: group.x, y: group.y - target.height }
   else return false
 }
 
