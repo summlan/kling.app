@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="canvasContainer" class="border-2 rounded-lg overflow-hidden">
     <v-stage
       ref="stage"
       :config="configKonva"
@@ -86,11 +86,6 @@ function snapToLetter (group, target) {
   else return false
 }
 
-const width = window.innerWidth - 32
-const height = window.innerHeight - 200
-
-console.log(width, height)
-
 export default {
   data () {
     return {
@@ -98,8 +93,8 @@ export default {
       dragItemId: null,
       fillColor: '#702459',
       configKonva: {
-        width: width,
-        height: height
+        width: 400,
+        height: 600
       }
     }
   },
@@ -138,13 +133,15 @@ export default {
     }
   },
   mounted () {
+    this.configKonva.height = this.$refs.canvasContainer.clientHeight
+    this.configKonva.width = this.$refs.canvasContainer.clientWidth
     let letters = 'HAYLEY'.split('')
     // let letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ'.split('')
     letters.forEach((letter, index) => {
       this.list.push({
         id: index,
-        x: Math.random() * width,
-        y: Math.random() * height,
+        x: 100 + (Math.random() * (this.configKonva.width - 200)),
+        y: 100 + (Math.random() * (this.configKonva.height - 200)),
         width: 50,
         height: 50,
         fillColor: this.fillColor,
