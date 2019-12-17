@@ -1,6 +1,7 @@
-import firebase from 'firebase/app'
+import * as firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
+import 'firebase/performance'
 import { authState } from 'rxfire/auth'
 import { collectionData } from 'rxfire/firestore'
 
@@ -22,6 +23,7 @@ const auth = firebase.auth()
 const GoogleAuthProvider = firebase.auth.GoogleAuthProvider
 const FacebookAuthProvider = firebase.auth.FacebookAuthProvider
 const { Timestamp, GeoPoint } = firebase.firestore
+const perf = firebase.performance
 
 // rxfire
 const documents$ = collectionData(firestore.collection('documents'))

@@ -77,7 +77,7 @@ export default {
         .then((credentials) => {
         })
         .catch((err) => {
-          console.log(err)
+          return err
         })
     },
     signOut () {
@@ -85,7 +85,7 @@ export default {
         .then(() => {
         })
         .catch((err) => {
-          console.log(err)
+          return err
         })
     }
   }

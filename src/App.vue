@@ -1,8 +1,8 @@
 <template>
   <div class="antialiased">
      <site-header />
-    <div class="container mx-auto px-4 py-3">
-      <router-view />
+    <div class="container mx-auto">
+        <router-view  />
     </div>
   </div>
 </template>
@@ -30,7 +30,7 @@ export default Vue.extend({
         .then((credentials) => {
         })
         .catch((err) => {
-          console.log(err)
+          return err
         })
     },
     signOut () {
@@ -38,7 +38,7 @@ export default Vue.extend({
         .then(() => {
         })
         .catch((err) => {
-          console.log(err)
+          return err
         })
     }
   }
