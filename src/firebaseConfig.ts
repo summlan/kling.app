@@ -23,7 +23,9 @@ const auth = firebase.auth()
 const GoogleAuthProvider = firebase.auth.GoogleAuthProvider
 const FacebookAuthProvider = firebase.auth.FacebookAuthProvider
 const { Timestamp, GeoPoint } = firebase.firestore
+
 const performance = firebase.performance()
+const analytics = firebase.analytics()
 
 // rxfire
 const documents$ = collectionData(firestore.collection('documents'))
@@ -37,6 +39,5 @@ export {
   GeoPoint,
   GoogleAuthProvider,
   documents$,
-  currentUser$,
-  performance
+  currentUser$
 }
