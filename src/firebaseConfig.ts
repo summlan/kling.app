@@ -2,6 +2,7 @@ import * as firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
 import 'firebase/performance'
+import 'firebase/analytics'
 import { authState } from 'rxfire/auth'
 import { collectionData } from 'rxfire/firestore'
 
@@ -12,7 +13,8 @@ const firebaseConfig = {
   projectId: 'kling-app',
   storageBucket: 'kling-app.appspot.com',
   messagingSenderId: '704087155854',
-  appId: '1:704087155854:web:4a6561c1a3230f0f1d95df'
+  appId: '1:704087155854:web:4a6561c1a3230f0f1d95df',
+  measurementId: 'G-95QX5GLM1J'
 }
 
 firebase.initializeApp(firebaseConfig)

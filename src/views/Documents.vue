@@ -19,7 +19,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue'
 import { documents$ } from '@/firebaseConfig'
 
 export default Vue.extend({

@@ -32,6 +32,14 @@
 </div>
 </template>
 
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
+  name: 'skattjakt'
+
+})
+</script>
+
 <style scoped>
 .bg-image {
   background-image: url('~@/assets/treasuremap.jpg');

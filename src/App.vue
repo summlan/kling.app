@@ -23,24 +23,6 @@ export default Vue.extend({
       documents: [],
       isOpen: true
     }
-  },
-  methods: {
-    signInWithGoogle () {
-      auth.signInWithPopup(new GoogleAuthProvider().setCustomParameters({ prompt: 'select_account' }))
-        .then((credentials) => {
-        })
-        .catch((err) => {
-          return err
-        })
-    },
-    signOut () {
-      auth.signOut()
-        .then(() => {
-        })
-        .catch((err) => {
-          return err
-        })
-    }
   }
 })
 </script>

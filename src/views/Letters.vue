@@ -45,6 +45,8 @@
 </template>
 
 <script>
+import Vue from 'vue'
+
 function haveIntersection (r1, r2) {
   return !(
     r2.x > r1.x + r1.width ||
@@ -77,7 +79,7 @@ function snapToLetter (group, target) {
   else return false
 }
 
-export default {
+export default Vue.extend({
   data () {
     return {
       list: [],
@@ -140,7 +142,7 @@ export default {
       })
     })
   }
-}
+})
 </script>
 
 <style>
