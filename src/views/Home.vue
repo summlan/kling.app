@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <h1 class="text-2xl">...</h1>
+    <h1 class="text-2xl">Allt möjligt roligt.</h1>
   </div>
 </template>
 

@@ -55,6 +55,7 @@ function haveIntersection (r1, r2) {
           r2.y + r2.height < r1.y
   )
 }
+
 function snapToLetter (group, target) {
   let groupSnap = {
     left: { x: group.x, y: group.y + (group.height / 2) },
@@ -72,9 +73,9 @@ function snapToLetter (group, target) {
   }
 
   // left snap
-  if (distanceBetween.left < 30) return { x: group.x + target.width, y: group.y }
+  if (distanceBetween.left < 30) return { left: group, right: target, x: group.x + target.width, y: group.y }
   // right snap
-  else if (distanceBetween.right < 30) return { x: group.x - target.width, y: group.y }
+  else if (distanceBetween.right < 30) return { left: target, right: group, x: group.x - target.width, y: group.y }
   // top snap
   else return false
 }
@@ -84,7 +85,9 @@ export default Vue.extend({
     return {
       list: [],
       dragItemId: null,
+      snapped: {},
       fillColor: '#702459',
+      words: [],
       configKonva: {
         width: 400,
         height: 600
@@ -114,15 +117,40 @@ export default Vue.extend({
         }
 
         let snap = snapToLetter(group.attrs, target.attrs)
+        this.snapped = snap
         if (snap) {
-          target.setPosition(snap)
+          target.setPosition({ x: snap.x, y: snap.y })
+        } else {
         }
         // do not need to call layer.draw() here
-        // because it will be called by dragmove action
+        // because it will be called by dragmove action   [ ][ ]
       })
     },
     handleDragend (e) {
+      const currentItem = this.list.find(i => i.id === this.dragItemId)
+      let { x, y } = e.target.getPosition()
+      currentItem.x = x
+      currentItem.y = y
       this.dragItemId = null
+
+      const itemBefore = this.list.find(i => currentItem.y === i.y && currentItem.x === (i.x - 50))
+      const itemAfter = this.list.find(i => currentItem.y === i.y && currentItem.x === (i.x + 50))
+      if (itemBefore !== undefined) {
+        const indexOfItemBefore = this.words.indexOf(itemBefore)
+        if (indexOfItemBefore === -1) {
+          this.words.push(...[itemBefore, currentItem])
+        } else {
+          this.words.splice(indexOfItemBefore - 1, 0, currentItem)
+        }
+      } else if (itemAfter !== undefined) {
+        const indexOfItemAfter = this.words.indexOf(itemAfter)
+        if (indexOfItemAfter === -1) {
+          this.words.push(...[currentItem, itemAfter])
+        } else {
+          this.words.splice(indexOfItemAfter, 0, currentItem)
+        }
+      }
+      console.log(itemBefore, itemAfter)
     }
   },
   mounted () {
@@ -130,11 +158,11 @@ export default Vue.extend({
     this.configKonva.width = this.$refs.canvasContainer.clientWidth
     let letters = 'HAYLEY'.split('')
     // let letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ'.split('')
-    letters.forEach((letter, index) => {
+    letters.forEach((letter) => {
       this.list.push({
-        id: index,
-        x: 100 + (Math.random() * (this.configKonva.width - 200)),
-        y: 100 + (Math.random() * (this.configKonva.height - 200)),
+        id: Math.random() * 1000,
+        x: (100 + (Math.random() * (this.configKonva.width - 200)) | 0),
+        y: (100 + (Math.random() * (this.configKonva.height - 200)) | 0),
         width: 50,
         height: 50,
         fillColor: this.fillColor,
