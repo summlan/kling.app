@@ -15,6 +15,7 @@
           y: item.y,
           width: item.width,
           height: item.height,
+          fillColor: item.fillColor,
         }" >
         <v-rect
           :config="{
@@ -87,7 +88,7 @@ export default Vue.extend({
       dragItemId: null,
       dragItem: {},
       snapped: {},
-      fillColor: '#702459',
+      fillColor: 'rgb(255, 165, 0)',
       words: [],
       configKonva: {
         width: 400,
@@ -98,7 +99,6 @@ export default Vue.extend({
   methods: {
     handleDragstart (e) {
       let target = e.target
-      let targetRect = e.target.getClientRect()
       // save drag element:
       this.dragItemId = target.id()
       // move current element to the top:
@@ -110,7 +110,6 @@ export default Vue.extend({
     },
     handleDragMove (e) {
       let target = e.target
-      let targetRect = e.target.getClientRect()
 
       this.$refs.layer._konvaNode.children.each(group => {
         // do not check intersection with itself
@@ -121,17 +120,18 @@ export default Vue.extend({
         let snap = snapToLetter(group.attrs, target.attrs)
         if (snap) {
           target.setPosition(snap)
+          target.children[0].setFill(group.attrs.fillColor)
+        } else {
+          target.children[0].setFill(target.attrs.fillColor)
         }
         // do not need to call layer.draw() here
         // because it will be called by dragmove action   [ ][ ]
       })
     },
     handleDragend (e) {
-      let { x, y } = e.target.getPosition()
-      this.dragItem.x = x
-      this.dragItem.y = y
-      const connectedItems = this.list.find(i => i.y === y && ((i.x + 50) === x || i.x === (x + 50)))
-      console.log(connectedItems)
+      // let { x, y } = e.target.getPosition()
+      // this.dragItem.x = x
+      // this.dragItem.y = y
       this.dragItemId = null
     }
   },
@@ -141,13 +141,18 @@ export default Vue.extend({
     let letters = 'HAYLEY'.split('')
     // let letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ'.split('')
     letters.forEach((letter) => {
+      let color = {
+        r: (Math.random() * 150) + 55 | 0,
+        g: (Math.random() * 150) + 55 | 0,
+        b: (Math.random() * 150) + 55 | 0
+      }
       this.list.push({
         id: Math.random() * 1000,
         x: (100 + (Math.random() * (this.configKonva.width - 200)) | 0),
         y: (100 + (Math.random() * (this.configKonva.height - 200)) | 0),
         width: 50,
         height: 50,
-        fillColor: this.fillColor,
+        fillColor: `rgba(${color.r},${color.g},${color.b})`,
         letter: letter
       })
     })
