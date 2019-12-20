@@ -73,9 +73,9 @@ function snapToLetter (group, target) {
   }
 
   // left snap
-  if (distanceBetween.left < 30) return { left: group, right: target, x: group.x + target.width, y: group.y }
+  if (distanceBetween.left < 30) return { x: group.x + target.width, y: group.y }
   // right snap
-  else if (distanceBetween.right < 30) return { left: target, right: group, x: group.x - target.width, y: group.y }
+  else if (distanceBetween.right < 30) return { x: group.x - target.width, y: group.y }
   // top snap
   else return false
 }
@@ -85,6 +85,7 @@ export default Vue.extend({
     return {
       list: [],
       dragItemId: null,
+      dragItem: {},
       snapped: {},
       fillColor: '#702459',
       words: [],
@@ -102,7 +103,8 @@ export default Vue.extend({
       this.dragItemId = target.id()
       // move current element to the top:
       const item = this.list.find(i => i.id === this.dragItemId)
-      const index = this.list.indexOf(item)
+      this.dragItem = item
+      let index = this.list.indexOf(item)
       this.list.splice(index, 1)
       this.list.push(item)
     },
@@ -117,40 +119,20 @@ export default Vue.extend({
         }
 
         let snap = snapToLetter(group.attrs, target.attrs)
-        this.snapped = snap
         if (snap) {
-          target.setPosition({ x: snap.x, y: snap.y })
-        } else {
+          target.setPosition(snap)
         }
         // do not need to call layer.draw() here
         // because it will be called by dragmove action   [ ][ ]
       })
     },
     handleDragend (e) {
-      const currentItem = this.list.find(i => i.id === this.dragItemId)
       let { x, y } = e.target.getPosition()
-      currentItem.x = x
-      currentItem.y = y
+      this.dragItem.x = x
+      this.dragItem.y = y
+      const connectedItems = this.list.find(i => i.y === y && ((i.x + 50) === x || i.x === (x + 50)))
+      console.log(connectedItems)
       this.dragItemId = null
-
-      const itemBefore = this.list.find(i => currentItem.y === i.y && currentItem.x === (i.x - 50))
-      const itemAfter = this.list.find(i => currentItem.y === i.y && currentItem.x === (i.x + 50))
-      if (itemBefore !== undefined) {
-        const indexOfItemBefore = this.words.indexOf(itemBefore)
-        if (indexOfItemBefore === -1) {
-          this.words.push(...[itemBefore, currentItem])
-        } else {
-          this.words.splice(indexOfItemBefore - 1, 0, currentItem)
-        }
-      } else if (itemAfter !== undefined) {
-        const indexOfItemAfter = this.words.indexOf(itemAfter)
-        if (indexOfItemAfter === -1) {
-          this.words.push(...[currentItem, itemAfter])
-        } else {
-          this.words.splice(indexOfItemAfter, 0, currentItem)
-        }
-      }
-      console.log(itemBefore, itemAfter)
     }
   },
   mounted () {
