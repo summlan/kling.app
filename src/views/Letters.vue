@@ -1,5 +1,6 @@
 <template>
-  <div ref="canvasContainer" class="border-2 rounded-lg overflow-hidden">
+<div>
+  <div ref="canvasContainer" class="mt-2 border-2 border-gray-800 rounded-lg overflow-hidden">
     <v-stage
       ref="stage"
       :config="configKonva"
@@ -42,6 +43,10 @@
         </v-group>
       </v-layer>
     </v-stage>
+</div>
+    <div>
+      <ul><li v-for="word in words" :key="word">{{word}}</li></ul>
+    </div>
   </div>
 </template>
 
@@ -55,6 +60,13 @@ function haveIntersection (r1, r2) {
           r2.y > r1.y + r1.height ||
           r2.y + r2.height < r1.y
   )
+}
+
+function logLetters (item) {
+  let word = ''
+  word += item.letter
+  if (item.child !== null) word += logLetters(item.child)
+  return word
 }
 
 function snapToLetter (group, target) {
@@ -87,8 +99,9 @@ export default Vue.extend({
       list: [],
       dragItemId: null,
       dragItem: {},
-      snapped: {},
-      fillColor: 'rgb(255, 165, 0)',
+      fillColor: '#3fabd5',
+      connectedColor: '#d53f8c',
+      snappableEdges: [],
       words: [],
       configKonva: {
         width: 400,
@@ -110,49 +123,57 @@ export default Vue.extend({
     },
     handleDragMove (e) {
       let target = e.target
+      let targetPosition = target.getPosition()
 
-      this.$refs.layer._konvaNode.children.each(group => {
-        // do not check intersection with itself
-        if (group === target) {
-          return
+      this.list.forEach(item => {
+        if (item.id !== target.id()) {
+          let snap = snapToLetter(item, target.attrs)
+          if (snap) {
+            target.setPosition(snap)
+          }
         }
 
-        let snap = snapToLetter(group.attrs, target.attrs)
-        if (snap) {
-          target.setPosition(snap)
-          target.children[0].setFill(group.attrs.fillColor)
-        } else {
-          target.children[0].setFill(target.attrs.fillColor)
-        }
-        // do not need to call layer.draw() here
-        // because it will be called by dragmove action   [ ][ ]
+      // do not need to call layer.draw() here
+      // because it will be called by dragmove action   [ ][ ]
       })
     },
     handleDragend (e) {
-      // let { x, y } = e.target.getPosition()
-      // this.dragItem.x = x
-      // this.dragItem.y = y
+      let pos = e.target.getPosition()
+      this.words = []
+      this.dragItem.x = pos.x
+      this.dragItem.y = pos.y
       this.dragItemId = null
+      this.list.forEach(item => {
+        const itemAfter = this.list.find(i => item.y === i.y && item.x === (i.x - 50)) || null
+        const itemBefore = this.list.find(i => item.y === i.y && item.x === (i.x + 50)) || null
+        item.parent = itemBefore
+        item.child = itemAfter
+
+        if (itemBefore || itemAfter) {
+          item.fillColor = this.connectedColor
+        } else item.fillColor = this.fillColor
+      })
+
+      this.list.forEach(item => {
+        if (item.parent === null && item.child !== null) {
+          this.words.push(logLetters(item))
+        }
+      })
     }
   },
   mounted () {
     this.configKonva.height = this.$refs.canvasContainer.clientHeight
     this.configKonva.width = this.$refs.canvasContainer.clientWidth
-    let letters = 'HAYLEY'.split('')
+    let letters = 'HAYLEYLUCASPAPPASAMUELMAMMACECILIAMAJANILSKLING'.split('')
     // let letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ'.split('')
     letters.forEach((letter) => {
-      let color = {
-        r: (Math.random() * 150) + 55 | 0,
-        g: (Math.random() * 150) + 55 | 0,
-        b: (Math.random() * 150) + 55 | 0
-      }
       this.list.push({
         id: Math.random() * 1000,
         x: (100 + (Math.random() * (this.configKonva.width - 200)) | 0),
         y: (100 + (Math.random() * (this.configKonva.height - 200)) | 0),
         width: 50,
         height: 50,
-        fillColor: `rgba(${color.r},${color.g},${color.b})`,
+        fillColor: this.fillColor,
         letter: letter
       })
     })

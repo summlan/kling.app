@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-gray-800 bg">
+  <header class="bg-gray-800">
     <div class="container mx-auto sm:flex sm:items-center sm:justify-between">
       <div class="flex justify-between px-4 py-3">
         <div class="text-pink-600 font-semibold text-xl">Kling</div>
@@ -15,9 +15,9 @@
       <nav class="sm:flex sm:items-center sm:px-4" :class="isOpen ? 'block': 'hidden'">
         <div class="sm:flex sm:items-center">
           <div class="px-2 pt-2 pb-5 border-b border-pink-600 sm:flex sm:border-b-0 sm:py-0 sm:px-0">
-            <router-link exact to="/" class="block px-3 py-1 rounded font-semibold hover:bg-pink-600 sm:text-sm sm:px-2">Home</router-link>
-            <router-link exact to="/skattjakt" class="mt-1 block px-3 py-1 rounded font-semibold hover:bg-pink-600 sm:mt-0 sm:text-sm sm:px-2 sm:ml-2">Skattjakt</router-link>
-            <router-link exact to="/letters" class="mt-1 block px-3 py-1 rounded font-semibold hover:bg-pink-600 sm:mt-0 sm:text-sm sm:px-2 sm:ml-2">Bokstäver</router-link>
+            <router-link exact to="/" class="block px-3 py-1 rounded font-semibold hover:bg-pink-600 sm:text-sm sm:px-2" active-class="bg-pink-600">Home</router-link>
+            <router-link exact to="/skattjakt" class="mt-1 block px-3 py-1 rounded font-semibold hover:bg-pink-600 sm:mt-0 sm:text-sm sm:px-2 sm:ml-2" active-class="bg-pink-600">Skattjakt</router-link>
+            <router-link exact to="/letters" class="mt-1 block px-3 py-1 rounded font-semibold hover:bg-pink-600 sm:mt-0 sm:text-sm sm:px-2 sm:ml-2" active-class="bg-pink-600">Bokstäver</router-link>
           </div>
           <div class="relative px-5 py-5 sm:py-0 sm:ml-4 sm:px-0">
             <div class="flex items-center sm:hidden mb-5">
@@ -37,10 +37,10 @@
                 </span>
               </template>
               <template #dropdown>
-                <div class="mt-1 bg-white rounded-lg w-48 py-2 shadow-lg border">
-                  <button type="button" v-if="!currentUser$" @click="signInWithGoogle" class=" w-full text-left hover: text-gray-800 px-4 py-2 hover:bg-pink-700">Sign in with Google</button>
-                  <button type="button" v-if="currentUser$" class="w-full text-left hover: text-gray-800 px-4 py-2 hover:bg-pink-700">Account settings</button>
-                  <button type="button" v-if="currentUser$" @click="signOut" class=" w-full text-left hover: text-gray-800 mt-0 px-4 py-2 hover:bg-pink-700">Sign out</button>
+                <div class="mt-1 bg-white rounded-lg w-48 py-2 shadow-lg border text-gray-800">
+                  <button type="button" v-if="!currentUser$" @click="signInWithGoogle" class="w-full text-left hover:text-gray-200 px-4 py-2 hover:bg-pink-700">Sign in with Google</button>
+                  <button type="button" v-if="currentUser$" class="w-full text-left hover:text-gray-200 px-4 py-2 hover:bg-pink-700">Account settings</button>
+                  <button type="button" v-if="currentUser$" @click="signOut" class=" w-full text-left hover:text-gray-200 mt-0 px-4 py-2 hover:bg-pink-700">Sign out</button>
                 </div>
               </template>
             </Dropdown>
@@ -61,6 +61,11 @@ export default {
   data () {
     return {
       isOpen: false
+    }
+  },
+  watch: {
+    '$route' () {
+      this.isOpen = false
     }
   },
   subscriptions () {

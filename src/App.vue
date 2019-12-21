@@ -40,5 +40,6 @@ export default Vue.extend({
 
   body {
     font-family: 'Montserrat', sans-serif;
+    @apply bg-gray-900 text-gray-300;
   }
 </style>
