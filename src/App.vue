@@ -8,20 +8,27 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
 import { firestore, GoogleAuthProvider, auth } from '@/firebaseConfig'
 import router from './router'
 import SiteHeader from '@/components/SiteHeader.vue'
 
-export default Vue.extend({
+import { createComponent, ref } from '@vue/composition-api'
+import Character from './interfaces/Character'
+import CharacterService from './services/CharacterService'
+
+export default createComponent({
   name: 'app',
-  components: {
-    SiteHeader
-  },
-  data () {
+  components: { SiteHeader },
+  setup () {
+    const characterService = new CharacterService()
+    const characters = ref<Character[]>([])
+
+    const fetchData = async (): Promise<void> => {
+      characters.value = await characterService.FetchCharacters()
+    }
+    fetchData()
     return {
-      documents: [],
-      isOpen: true
+      characters
     }
   }
 })
